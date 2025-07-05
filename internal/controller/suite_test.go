@@ -61,8 +61,10 @@ var _ = BeforeSuite(func() {
 
 	By("bootstrapping test environment")
 
-	envBinaryPath := filepath.Join("..", "..", "bin", "k8s", "1.33.0-darwin-arm64")
-	os.Setenv("KUBEBUILDER_ASSETS", envBinaryPath)
+	if os.Getenv("KUBEBUILDER_ASSETS") == "" {
+		envBinaryPath := filepath.Join("..", "..", "bin", "k8s", "1.33.0-darwin-arm64")
+		_ = os.Setenv("KUBEBUILDER_ASSETS", envBinaryPath)
+	}
 
 	testEnv = &envtest.Environment{
 		CRDDirectoryPaths:     []string{filepath.Join("..", "config", "crd", "bases")},
