@@ -64,10 +64,6 @@ var _ = BeforeSuite(func() {
 	envBinaryPath := os.Getenv("KUBEBUILDER_ASSETS")
 	Expect(envBinaryPath).NotTo(BeEmpty(), "KUBEBUILDER_ASSETS must be set before running tests")
 	os.Setenv("KUBEBUILDER_ASSETS", envBinaryPath)
-	// if os.Getenv("KUBEBUILDER_ASSETS") == "" {
-	// 	envBinaryPath := filepath.Join("..", "..", "bin", "k8s", "1.33.0-darwin-arm64")
-	// 	_ = os.Setenv("KUBEBUILDER_ASSETS", envBinaryPath)
-	// }
 
 	testEnv = &envtest.Environment{
 		CRDDirectoryPaths:     []string{filepath.Join("..", "config", "crd", "bases")},
