@@ -16,9 +16,18 @@ jobs:
       - run:
           name: Lint
           command: go vet ./...
+
       - run:
-          name: Test
-          command: go test ./internal/controller -v
+          name: Install envtest tools
+          command: |
+            go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
+            setup-envtest use 1.33.0 --os linux --arch amd64 --bin-dir ./testbin
+
+      - run:
+          name: Run Integration Tests
+          command: |
+            export KUBEBUILDER_ASSETS=$(pwd)/testbin
+            go test ./internal/controller -v
 
   docker-build:
     docker:
