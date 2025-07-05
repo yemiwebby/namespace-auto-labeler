@@ -1,0 +1,42 @@
+version: 2.1
+
+executors:
+  go-executor:
+    docker:
+      - image: cimg/go:1.24.4
+
+jobs:
+  lint-test:
+    executor: go-executor
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: go mod tidy
+      - run:
+          name: Lint
+          command: go vet ./...
+      - run:
+          name: Test
+          command: go test ./internal/controller -v
+
+  docker-build:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build and Push Docker Image
+          command: |
+            docker build -t docker.io/yemiwebby/namespace-auto-labeler:latest .
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
+            docker push docker.io/yemiwebby/namespace-auto-labeler:latest
+
+workflows:
+  build-and-deploy:
+    jobs:
+      - lint-test
+      - docker-build:
+          requires:
+            - lint-test
