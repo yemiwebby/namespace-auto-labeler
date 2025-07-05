@@ -29,9 +29,8 @@ jobs:
       - run:
           name: Build and Push Docker Image
           command: |
-            docker build -t docker.io/yemiwebby/namespace-auto-labeler:latest .
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
-            docker push docker.io/yemiwebby/namespace-auto-labeler:latest
+            make docker-buildx IMG=docker.io/yemiwebby/namespace-auto-labeler:latest
 
 workflows:
   build-and-deploy:
