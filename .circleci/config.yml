@@ -18,10 +18,10 @@ jobs:
           command: go vet ./...
 
       - run:
-          name: Install envtest tools
+          name: Install envtest tools and download control-plane binaries
           command: |
             go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
-            setup-envtest use 1.33.0 --os linux --arch amd64 --bin-dir ./testbin
+            eval "$(setup-envtest use 1.33.0 --os linux --arch amd64 --bin-dir ./testbin)"
 
       - run:
           name: Run Integration Tests
